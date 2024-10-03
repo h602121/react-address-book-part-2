@@ -1,8 +1,10 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../App";
+import { useNavigate } from "react-router-dom";
 
 export const AddUserComponent = () => {
-  const { userList, setUserList } = useContext(UserContext);
+  const { setUserList } = useContext(UserContext);
+  const Navigate = useNavigate();
   const UserBody = {
     "firstName": "",
     "lastName": "",
@@ -43,15 +45,15 @@ export const AddUserComponent = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newUser),
     };
-    await fetch(
+    const response = await fetch(
       "https://boolean-uk-api-server.fly.dev/h602121/contact",
       request
-    ).then((response) => response.json());
-    console.log(newUser);
-    if (request.ok) {
-      const user = await request.json();
-      setUserList([...userList, user]);
+    );
+    if (response.ok) {
+      const user = await response.json();
+      setUserList((userList) => [...userList, user]);
     }
+    Navigate("/contactlist");
   };
 
   return (
